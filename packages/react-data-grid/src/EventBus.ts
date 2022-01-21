@@ -2,11 +2,12 @@ import { Position } from './common/types';
 
 interface EventMap {
   SELECT_CELL(cell: Position, openEditor?: boolean): void;
-  SELECT_START(selectedPosition: Position): void;
+  SELECT_START(selectedPosition: Position, event: any): void;
   SELECT_UPDATE(cellPosition: Position, isFromKeyboard?: boolean, callback?: () => void): void;
-  SELECT_END(): void;
+  SELECT_END(event: any): void;
   DRAG_ENTER(overRowIdx: number): void;
   SCROLL_TO_COLUMN(idx: number): void;
+  FOCUS(): void;
 }
 
 type EventName = keyof EventMap;

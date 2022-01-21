@@ -30,9 +30,9 @@ function Cell<R>({
     cellMetaData.onCellClick({ idx, rowIdx });
   }
 
-  function handleCellMouseDown() {
+  function handleCellMouseDown(e: any) {
     if (cellMetaData.onCellMouseDown) {
-      cellMetaData.onCellMouseDown({ idx, rowIdx });
+      cellMetaData.onCellMouseDown({ idx, rowIdx }, e);
     }
   }
 

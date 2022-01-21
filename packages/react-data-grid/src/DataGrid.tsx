@@ -73,6 +73,10 @@ export interface DataGridProps<R, K extends keyof R> {
   selectedRows?: Set<R[K]>;
   /** Function called whenever row selection is changed */
   onSelectedRowsChange?(selectedRows: Set<R[K]>): void;
+  
+  onCopy?(): void;
+  onCut?(): void;
+  onPaste?(): void;
 
   /**
    * Callback called whenever row data is updated
@@ -144,6 +148,11 @@ export interface DataGridProps<R, K extends keyof R> {
   onCellDeSelected?(position: Position): void;
   /** called before cell is set active, returns a boolean to determine whether cell is editable */
   onCheckCellIsEditable?(event: CheckCellIsEditableEvent<R>): boolean;
+  
+  onCopy?(): void;
+  onCut?(): void;
+  onPaste?(): void;
+  
   /**
    * Rows to be pinned at the bottom of the rows view for summary, the vertical scroll bar will not scroll these rows.
    * Bottom horizontal scroll bar can move the row left / right. Or a customized row renderer can be used to disabled the scrolling support.
@@ -157,6 +166,7 @@ export interface DataGridHandle {
   scrollToColumn(colIdx: number): void;
   selectCell(position: Position, openEditor?: boolean): void;
   openCellEditor(rowIdx: number, colIdx: number): void;
+  focus(): void;
 }
 
 /**
@@ -226,19 +236,24 @@ function DataGrid<R, K extends keyof R>({
   useEffect(() => {
     if (!cellRangeSelection) return;
 
-    function handleWindowMouseUp() {
-      eventBus.dispatch(EventTypes.SELECT_END);
+    function handleWindowMouseUp(e: any) {
+      eventBus.dispatch(EventTypes.SELECT_END, e);
     }
 
-    window.addEventListener('mouseup', handleWindowMouseUp);
+    const dataGridComponent = document.getElementsByClassName('rdg-root')[0] //assumes only one react datagrid component exists
+    dataGridComponent.addEventListener('mouseup', handleWindowMouseUp);
 
     return () => {
-      window.removeEventListener('mouseup', handleWindowMouseUp);
+      dataGridComponent.removeEventListener('mouseup', handleWindowMouseUp);
     };
   }, [eventBus, cellRangeSelection]);
 
   function selectCell({ idx, rowIdx }: Position, openEditor?: boolean) {
     eventBus.dispatch(EventTypes.SELECT_CELL, { rowIdx, idx }, openEditor);
+  }
+  
+  function focus() {
+    eventBus.dispatch(EventTypes.FOCUS);
   }
 
   function getColumn(idx: number) {
@@ -279,8 +294,8 @@ function DataGrid<R, K extends keyof R>({
     }
   }
 
-  function handleCellMouseDown(position: Position) {
-    eventBus.dispatch(EventTypes.SELECT_START, position);
+  function handleCellMouseDown(position: Position, event: any) {
+    eventBus.dispatch(EventTypes.SELECT_START, position, event);
   }
 
   function handleCellMouseEnter(position: Position) {
@@ -376,7 +391,8 @@ function DataGrid<R, K extends keyof R>({
   useImperativeHandle(ref, () => ({
     scrollToColumn,
     selectCell,
-    openCellEditor
+    openCellEditor,
+    focus
   }));
 
   const cellMetaData: CellMetaData<R> = {
@@ -406,7 +422,10 @@ function DataGrid<R, K extends keyof R>({
     onCellRangeSelectionStarted: cellRangeSelection && cellRangeSelection.onStart,
     onCellRangeSelectionUpdated: cellRangeSelection && cellRangeSelection.onUpdate,
     onCellRangeSelectionCompleted: cellRangeSelection && cellRangeSelection.onComplete,
-    onCommit: handleCommit
+    onCommit: handleCommit,
+    onCopy: props.onCopy,
+    onCut: props.onCut,
+    onPaste: props.onPaste
   };
 
   const headerRows = getHeaderRows();

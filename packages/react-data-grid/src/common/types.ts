@@ -75,7 +75,7 @@ export interface CellMetaData<TRow> {
   onDragEnter(overRowIdx: number): void;
   onCellExpand?(options: SubRowOptions<TRow>): void;
   onRowExpandToggle?(e: RowExpandToggleEvent): void;
-  onCellMouseDown?(position: Position): void;
+  onCellMouseDown?(position: Position, event: any): void;
   onCellMouseEnter?(position: Position): void;
   onAddSubRow?(): void;
   onDeleteSubRow?(options: SubRowOptions<TRow>): void;
@@ -272,6 +272,9 @@ export interface InteractionMasksMetaData<TRow> {
   onCellRangeSelectionUpdated?(selectedRange: SelectedRange): void;
   onCellRangeSelectionCompleted?(selectedRange: SelectedRange): void;
   onCommit(e: CommitEvent<TRow>): void;
+  onCopy?(): void;
+  onCut?(): void;
+  onPaste?(): void;
 }
 
 export interface RowGroupMetaData {

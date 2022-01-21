@@ -19,7 +19,8 @@ export enum EventTypes {
   SELECT_UPDATE = 'SELECT_UPDATE',
   SELECT_END = 'SELECT_END',
   DRAG_ENTER = 'DRAG_ENTER',
-  SCROLL_TO_COLUMN = 'SCROLL_TO_COLUMN'
+  SCROLL_TO_COLUMN = 'SCROLL_TO_COLUMN',
+  FOCUS = 'FOCUS'
 }
 
 export enum HeaderRowType {
