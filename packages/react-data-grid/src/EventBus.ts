@@ -2,6 +2,7 @@ import { Position } from './common/types';
 
 interface EventMap {
   SELECT_CELL(cell: Position, openEditor?: boolean): void;
+  EDIT_CELL(cell: Position, openEditor?: boolean): void;
   SELECT_START(selectedPosition: Position, event: any): void;
   SELECT_UPDATE(cellPosition: Position, isFromKeyboard?: boolean, callback?: () => void): void;
   SELECT_END(event: any): void;

@@ -237,7 +237,9 @@ function DataGrid<R, K extends keyof R>({
     if (!cellRangeSelection) return;
 
     function handleWindowMouseUp(e: any) {
-      eventBus.dispatch(EventTypes.SELECT_END, e);
+      if (e.detail !== 2) { //don't dispatch for double clicks
+        eventBus.dispatch(EventTypes.SELECT_END, e);
+      }  
     }
 
     const dataGridComponent = document.getElementsByClassName('rdg-root')[0] //assumes only one react datagrid component exists
@@ -249,7 +251,11 @@ function DataGrid<R, K extends keyof R>({
   }, [eventBus, cellRangeSelection]);
 
   function selectCell({ idx, rowIdx }: Position, openEditor?: boolean) {
-    eventBus.dispatch(EventTypes.SELECT_CELL, { rowIdx, idx }, openEditor);
+    if (openEditor){ //openEditor will be true for double clicks
+      eventBus.dispatch(EventTypes.EDIT_CELL, { rowIdx: rowIdx, idx: idx });
+    } else {
+      eventBus.dispatch(EventTypes.SELECT_CELL, { rowIdx, idx }, openEditor);
+    }
   }
   
   function focus() {
@@ -295,7 +301,9 @@ function DataGrid<R, K extends keyof R>({
   }
 
   function handleCellMouseDown(position: Position, event: any) {
-    eventBus.dispatch(EventTypes.SELECT_START, position, event);
+    if (event.detail !== 2) { //don't dispatch for double clicks
+      eventBus.dispatch(EventTypes.SELECT_START, position, event);
+    }
   }
 
   function handleCellMouseEnter(position: Position) {

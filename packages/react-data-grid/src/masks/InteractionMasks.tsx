@@ -141,6 +141,7 @@ export default class InteractionMasks<R, K extends keyof R> extends React.Compon
 
     this.unsubscribeEventHandlers = [
       eventBus.subscribe(EventTypes.SELECT_CELL, this.onSelectCell),
+      eventBus.subscribe(EventTypes.EDIT_CELL, this.onEditCell),
       eventBus.subscribe(EventTypes.SELECT_START, this.onSelectCellRangeStarted),
       eventBus.subscribe(EventTypes.SELECT_UPDATE, this.onSelectCellRangeUpdated),
       eventBus.subscribe(EventTypes.SELECT_END, this.onSelectCellRangeEnded),
@@ -605,6 +606,10 @@ export default class InteractionMasks<R, K extends keyof R> extends React.Compon
     if(!this.isSelected(cellPosition)) {
       this.selectCell(cellPosition);
     }
+  }
+
+  onEditCell = (cellPosition: Position): void => {
+    this.selectCell(cellPosition, true);
   }
 
   isDragEnabled(): boolean {

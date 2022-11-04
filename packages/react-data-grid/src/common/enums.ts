@@ -15,6 +15,7 @@ export enum DragItemTypes {
 
 export enum EventTypes {
   SELECT_CELL = 'SELECT_CELL',
+  EDIT_CELL = 'EDIT_CELL',
   SELECT_START = 'SELECT_START',
   SELECT_UPDATE = 'SELECT_UPDATE',
   SELECT_END = 'SELECT_END',
